@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 class SplashFragment : Fragment() {
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,33 +24,30 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        if (SharedPreferenceUtil.getIsInitialDataDownloaded(context!!))
-        {
+        if (SharedPreferenceUtil.getIsInitialDataDownloaded(context!!)) {
             findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
-        }
-        else
-        {
-            val initialDataDownload = InitialDataDownload(context!!,object : InitialDataDownload.DownloadListener
-            {
-                override fun onCompleted() {
-                    progress_bar.hide()
-                    Toast.makeText(context,"Download Completed", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
-                    SharedPreferenceUtil.saveInitialDataDownloaded(context!!,true)
-                }
+        } else {
+            val initialDataDownload =
+                InitialDataDownload(context!!, object : InitialDataDownload.DownloadListener {
+                    override fun onCompleted() {
+                        progress_bar.hide()
+                        Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show()
+                        findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                        SharedPreferenceUtil.saveInitialDataDownloaded(context!!, true)
+                    }
 
-                override fun onError() {
-                    progress_bar.hide()
-                    Toast.makeText(context,"Download Error", Toast.LENGTH_SHORT).show()
-                }
+                    override fun onError() {
+                        progress_bar.hide()
+                        Toast.makeText(context, "Download Error", Toast.LENGTH_SHORT).show()
+                    }
 
-                override fun onStarted() {
-                    progress_bar.show()
-                    Toast.makeText(context,"Initial Data Downloading", Toast.LENGTH_SHORT).show()
-                }
+                    override fun onStarted() {
+                        progress_bar.show()
+                        Toast.makeText(context, "Initial Data Downloading", Toast.LENGTH_LONG)
+                            .show()
+                    }
 
-            })
+                })
 
             initialDataDownload.downloadDataFiles()
         }

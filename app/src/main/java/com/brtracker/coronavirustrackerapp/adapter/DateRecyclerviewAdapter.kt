@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brtracker.coronavirustrackerapp.R
 import com.brtracker.coronavirustrackerapp.dialog.SelectCategory
 import kotlinx.android.synthetic.main.date_layout_item.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DateRecyclerviewAdapter(val context: Context) : RecyclerView.Adapter<DateRecyclerviewAdapter.ViewHolder>() {
 
@@ -41,8 +43,14 @@ class DateRecyclerviewAdapter(val context: Context) : RecyclerView.Adapter<DateR
 
     fun addDate(date:String)
     {
-        this.dates.add(date)
-        notifyItemInserted(this.dates.size)
+        this.dates.add(0,date)
+        notifyItemInserted(0)
+    }
+
+    fun sortData()
+    {
+        Collections.sort(this.dates, Collections.reverseOrder())
+        notifyDataSetChanged()
     }
 
     class ViewHolder(itemView:View,val context: Context) : RecyclerView.ViewHolder(itemView) {

@@ -3,15 +3,13 @@ package com.brtracker.coronavirustrackerapp.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.brtracker.coronavirustrackerapp.R
 import com.brtracker.coronavirustrackerapp.adapter.DateRecyclerviewAdapter
-import com.brtracker.coronavirustrackerapp.api.InitialDataDownload
 import com.brtracker.coronavirustrackerapp.api.NetworkApi
 import com.brtracker.coronavirustrackerapp.util.getDateFromUtl
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
 
-    private val TAG=HomeFragment::class.java.simpleName
+    private val TAG = HomeFragment::class.java.simpleName
 
     lateinit var dateRecyclerviewAdapter: DateRecyclerviewAdapter
 
@@ -61,7 +59,7 @@ class HomeFragment : Fragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d(TAG,it.toString())
+                Log.d(TAG, it.toString())
                 dateRecyclerviewAdapter.addDate(it)
             }, {
                 it.printStackTrace()

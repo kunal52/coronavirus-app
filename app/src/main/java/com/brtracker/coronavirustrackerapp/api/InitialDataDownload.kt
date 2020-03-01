@@ -4,13 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Environment
 import android.util.Log
+import com.brtracker.coronavirustrackerapp.util.createDownloadedUrlFromFileName
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.HttpUrl
 import okhttp3.ResponseBody
 import java.io.*
 
-class InitialDataDownload(val context: Context,private val listener: DownloadListener) {
+class InitialDataDownload(val context: Context, private val listener: DownloadListener) {
 
     private val TAG = InitialDataDownload::class.java.simpleName
 
@@ -49,6 +50,25 @@ class InitialDataDownload(val context: Context,private val listener: DownloadLis
             })
     }
 
+    @SuppressLint("CheckResult")
+    fun downloadSingleFile(fileName: String) {
+        listener.onStarted()
+        NetworkApi.create()
+            .downloadFileWithDynamicUrlSync(createDownloadedUrlFromFileName(fileName))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnComplete { listener.onCompleted() }
+            .subscribe({
+                writeResponseBodyToDisk(
+                    it.body()!!,
+                    getFileNameFromUrl(it.raw().request().url())
+                )
+            }, {
+                it.printStackTrace()
+                listener.onError()
+            })
+    }
+
 
     private fun getFileNameFromUrl(url: HttpUrl): String {
         val encodedPathSegments = url.encodedPathSegments()
@@ -59,13 +79,12 @@ class InitialDataDownload(val context: Context,private val listener: DownloadLis
         return try {
             val csvFileDownload =
                 File(context.filesDir, fileName)
-            Log.d(TAG, csvFileDownload.path)
             if (!csvFileDownload.exists()) csvFileDownload.createNewFile()
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null
             try {
                 val fileReader = ByteArray(4096)
-                val fileSize = body.contentLength()
+                body.contentLength()
                 var fileSizeDownloaded: Long = 0
                 inputStream = body.byteStream()
                 outputStream = FileOutputStream(csvFileDownload)
@@ -76,10 +95,6 @@ class InitialDataDownload(val context: Context,private val listener: DownloadLis
                     }
                     outputStream.write(fileReader, 0, read)
                     fileSizeDownloaded += read.toLong()
-                    Log.d(
-                        TAG,
-                        "file download: $fileSizeDownloaded of $fileSize"
-                    )
                 }
                 outputStream.flush()
                 true
