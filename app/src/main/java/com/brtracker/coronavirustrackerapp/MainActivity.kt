@@ -6,6 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.brtracker.coronavirustrackerapp.api.InitialDataDownload
+import com.google.android.material.bottomnavigation.BottomNavigationMenu
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -19,6 +21,28 @@ class MainActivity : AppCompatActivity()  {
         setContentView(R.layout.activity_main)
         progress_bar.hide()
 
+        bottom_navigation.setOnNavigationItemSelectedListener {
+
+            when(it.itemId)
+            {
+                R.id.total ->{
+                    Log.d(TAG,"Total")
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.data ->{
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.plots->{
+                    return@setOnNavigationItemSelectedListener true
+                }
+                else ->
+                {
+                    return@setOnNavigationItemSelectedListener true
+                }
+            }
+
+        }
 
         /* val rows: ArrayList<DataTableRow> = ArrayList()
 
