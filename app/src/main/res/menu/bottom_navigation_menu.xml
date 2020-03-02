@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:icon="@drawable/ic_virus"
-        android:id="@+id/total"
+        android:id="@+id/totalFragment"
         android:title="@string/total" />
 
     <item
         android:icon="@drawable/ic_graph"
-        android:id="@+id/plots"
+        android:id="@+id/plotFragment"
         android:title="@string/plots" />
 
     <item
         android:icon="@drawable/ic_data"
-        android:id="@+id/data"
+        android:id="@+id/homeFragment"
         android:title="@string/data" />
 
 </menu>

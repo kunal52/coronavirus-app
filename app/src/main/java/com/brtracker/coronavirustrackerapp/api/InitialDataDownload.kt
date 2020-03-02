@@ -2,7 +2,6 @@ package com.brtracker.coronavirustrackerapp.api
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Environment
 import android.util.Log
 import com.brtracker.coronavirustrackerapp.util.createDownloadedUrlFromFileName
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,7 +21,7 @@ class InitialDataDownload(val context: Context, private val listener: DownloadLi
     }
 
     @SuppressLint("CheckResult")
-    fun downloadDataFiles() {
+    fun downloadInitialDataFiles() {
 
         listener.onStarted()
 
@@ -31,6 +30,8 @@ class InitialDataDownload(val context: Context, private val listener: DownloadLi
             .flatMapIterable { it }
             .skip(1)
             .skipLast(1)
+            .filter {
+                !checkFileExist(com.brtracker.coronavirustrackerapp.util.getFileNameFromUrl(it.downloadUrl))  }
             .flatMap {
                 NetworkApi.create()
                     .downloadFileWithDynamicUrlSync(it.downloadUrl)
@@ -49,6 +50,41 @@ class InitialDataDownload(val context: Context, private val listener: DownloadLi
                 it.printStackTrace()
             })
     }
+
+
+    @SuppressLint("CheckResult")
+    fun downloadDataFiles() {
+
+        listener.onStarted()
+
+        NetworkApi.create().getFilesArray()
+            .map { it.body() }
+            .flatMapIterable { it }
+            .skip(1)
+            .skipLast(1)
+            .filter {
+                !checkFileExist(com.brtracker.coronavirustrackerapp.util.getFileNameFromUrl(it.downloadUrl))  }
+            .flatMap {
+                NetworkApi.create()
+                    .downloadFileWithDynamicUrlSync(it.downloadUrl)
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnComplete { listener.onCompleted() }
+            .subscribe({
+                Log.d(TAG, it.raw().request().url().toString())
+                if (it.isSuccessful)
+                    writeResponseBodyToDisk(
+                        it.body()!!,
+                        getFileNameFromUrl(it.raw().request().url())
+                    )
+            }, {
+                it.printStackTrace()
+            })
+    }
+
+
+
 
     @SuppressLint("CheckResult")
     fun downloadSingleFile(fileName: String) {
@@ -69,10 +105,18 @@ class InitialDataDownload(val context: Context, private val listener: DownloadLi
             })
     }
 
+    private fun checkFileExist(fileName: String): Boolean {
+        val csvFileDownload =
+            File(context.filesDir, fileName)
+        if (csvFileDownload.exists())
+            return true
+        return false
+    }
+
 
     private fun getFileNameFromUrl(url: HttpUrl): String {
         val encodedPathSegments = url.encodedPathSegments()
-        return encodedPathSegments.get(encodedPathSegments.size - 1)
+        return encodedPathSegments[encodedPathSegments.size - 1]
     }
 
     private fun writeResponseBodyToDisk(body: ResponseBody, fileName: String): Boolean {

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.brtracker.coronavirustrackerapp.R
 import com.brtracker.coronavirustrackerapp.adapter.DateRecyclerviewAdapter
 import com.brtracker.coronavirustrackerapp.api.NetworkApi
-import com.brtracker.coronavirustrackerapp.util.getDateFromUtl
+import com.brtracker.coronavirustrackerapp.util.getDateFromUrl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
             .map {
                 val list = ArrayList<String>()
                 it.forEach { gitFileInfo ->
-                    list.add(getDateFromUtl(gitFileInfo.downloadUrl))
+                    list.add(getDateFromUrl(gitFileInfo.downloadUrl))
                 }
                 return@map list
             }

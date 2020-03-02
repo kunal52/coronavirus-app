@@ -25,14 +25,14 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (SharedPreferenceUtil.getIsInitialDataDownloaded(context!!)) {
-            findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            findNavController().navigate(R.id.action_splashFragment_to_totalFragment)
         } else {
             val initialDataDownload =
                 InitialDataDownload(context!!, object : InitialDataDownload.DownloadListener {
                     override fun onCompleted() {
                         progress_bar.hide()
                         Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                        findNavController().navigate(R.id.action_splashFragment_to_totalFragment)
                         SharedPreferenceUtil.saveInitialDataDownloaded(context!!, true)
                     }
 
@@ -49,7 +49,7 @@ class SplashFragment : Fragment() {
 
                 })
 
-            initialDataDownload.downloadDataFiles()
+            initialDataDownload.downloadInitialDataFiles()
         }
     }
 }
