@@ -24,31 +24,39 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-            val initialDataDownload =
-                InitialDataDownload(context!!, object : InitialDataDownload.DownloadListener {
-                    override fun onCompleted() {
-                        progress_bar.hide()
+        val initialDataDownload =
+            InitialDataDownload(context!!, object : InitialDataDownload.DownloadListener {
+                override fun onCompleted() {
+                    progress_bar.hide()
+                    if (!SharedPreferenceUtil.getIsInitialDataDownloaded(context!!))
                         Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.action_splashFragment_to_totalFragment)
-                        //SharedPreferenceUtil.saveInitialDataDownloaded(context!!, true)
-                    }
 
-                    override fun onError() {
-                        progress_bar.hide()
+                    SharedPreferenceUtil.saveInitialDataDownloaded(context!!, true)
+                    findNavController().navigate(R.id.action_splashFragment_to_totalFragment)
+
+                }
+
+                override fun onError() {
+                    progress_bar.hide()
+                    if (!SharedPreferenceUtil.getIsInitialDataDownloaded(context!!))
                         Toast.makeText(context, "Download Error", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.action_splashFragment_to_totalFragment)
-                    }
+                    else
+                        Toast.makeText(context, "Updating Error", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_splashFragment_to_totalFragment)
+                }
 
-                    override fun onStarted() {
-                        findNavController().navigate(R.id.action_splashFragment_to_totalFragment)
-                        progress_bar.show()
+                override fun onStarted() {
+                    progress_bar.show()
+                    if (!SharedPreferenceUtil.getIsInitialDataDownloaded(context!!))
                         Toast.makeText(context, "Initial Data Downloading", Toast.LENGTH_LONG)
                             .show()
-                    }
+                    else
+                        Toast.makeText(context, "Updating Data", Toast.LENGTH_LONG)
+                            .show()
+                }
+            })
 
-                })
-
-            initialDataDownload.downloadInitialDataFiles()
+        initialDataDownload.downloadInitialDataFiles()
 
     }
 }

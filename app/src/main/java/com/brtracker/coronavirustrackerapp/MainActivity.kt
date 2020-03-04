@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.brtracker.coronavirustrackerapp.api.InitialDataDownload
 import com.google.android.material.bottomnavigation.BottomNavigationMenu
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -19,13 +20,16 @@ class MainActivity : AppCompatActivity()  {
 
     val TAG =MainActivity::class.java.simpleName
 
+    private lateinit var firebaseAnalytics : FirebaseAnalytics;
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         progress_bar.hide()
-
+        firebaseAnalytics=FirebaseAnalytics.getInstance(this)
         setUpBottomNavigation()
+
+
     }
 
     override fun onSupportNavigateUp() =
