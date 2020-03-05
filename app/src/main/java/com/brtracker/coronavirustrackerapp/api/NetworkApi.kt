@@ -2,6 +2,7 @@ package com.brtracker.coronavirustrackerapp.api
 
 
 import com.brtracker.coronavirustrackerapp.MyApplication
+import com.brtracker.coronavirustrackerapp.model.ArticleModel
 import com.brtracker.coronavirustrackerapp.model.GitFile
 import io.reactivex.Observable
 import okhttp3.Cache
@@ -12,6 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 import retrofit2.http.Url
 
 
@@ -37,6 +39,19 @@ interface NetworkApi {
 
             return retrofit.create(NetworkApi::class.java)
         }
+
+        fun createApi(): NetworkApi {
+
+            val retrofit = Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl("https://api.coronavirus.brtracker.com/")
+                .client(httpClient)
+                .build()
+
+            return retrofit.create(NetworkApi::class.java)
+        }
+
     }
 
     @GET("repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports")
@@ -44,5 +59,9 @@ interface NetworkApi {
 
     @GET
     fun downloadFileWithDynamicUrlSync(@Url fileUrl: String?): Observable<Response<ResponseBody>>
+
+    @GET("news")
+    fun getNews(@Query("page")page:Int = 0,@Query("size")size:Int=10) : Observable<Response<List<ArticleModel>>>
+
 
 }

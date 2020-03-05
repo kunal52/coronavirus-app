@@ -45,4 +45,17 @@
         android:name="com.brtracker.coronavirustrackerapp.ui.TotalFragment"
         android:label="fragment_total"
         tools:layout="@layout/fragment_total" />
+    <fragment
+        android:id="@+id/newsFragment"
+        android:name="com.brtracker.coronavirustrackerapp.ui.NewsFragment"
+        android:label="fragment_news"
+        tools:layout="@layout/fragment_news" >
+        <action
+            android:id="@+id/action_newsFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.brtracker.coronavirustrackerapp.ui.WebViewFragment"
+        android:label="WebViewFragment" />
 </navigation>

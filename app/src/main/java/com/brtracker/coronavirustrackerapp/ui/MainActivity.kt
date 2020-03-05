@@ -1,24 +1,19 @@
-package com.brtracker.coronavirustrackerapp
+package com.brtracker.coronavirustrackerapp.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
-import com.brtracker.coronavirustrackerapp.api.InitialDataDownload
-import com.google.android.material.bottomnavigation.BottomNavigationMenu
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.brtracker.coronavirustrackerapp.R
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity()  {
 
-    val TAG =MainActivity::class.java.simpleName
+    val TAG = MainActivity::class.java.simpleName
 
     private lateinit var firebaseAnalytics : FirebaseAnalytics;
     @SuppressLint("CheckResult")
@@ -28,6 +23,7 @@ class MainActivity : AppCompatActivity()  {
         progress_bar.hide()
         firebaseAnalytics=FirebaseAnalytics.getInstance(this)
         setUpBottomNavigation()
+
 
 
     }
